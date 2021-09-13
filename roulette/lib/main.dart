@@ -65,14 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
+              flex: 4,
               child: Container(
                 width: double.infinity,
                 // 背景色
@@ -90,7 +88,22 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Expanded(
+              flex: 1,
               child: Container(
+                width: double.infinity,
+                color: Colors.blue[300],
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'add',
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Container(
+                width: double.infinity,
+                color: Colors.blue[100],
                 child: Text('aaa'),
               ),
             ),
@@ -98,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.close),
+        child: Icon(Icons.whatshot),
         onPressed: () {
           startTimer();
         },
