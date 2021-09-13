@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'dart:async';
 
 void main() {
   runApp(MyApp());
@@ -27,12 +29,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  String _counter = '';
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    Timer.periodic(
+      Duration(seconds: 1),
+      _onTimer,
+    );
+    super.initState();
+  }
+
+  void _onTimer(Timer timer) {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('HH:mm:ss');
+    String formattedTime = formatter.format(now);
+    setState(() => _counter = formattedTime);
   }
 
   @override
@@ -54,11 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }
