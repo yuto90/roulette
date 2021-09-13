@@ -29,19 +29,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int index = 0;
+  bool isStart = false;
+  var timer;
+  List<String> member = ['gako', 'yuto', 'tika'];
 
-  @override
-  void initState() {
-    Timer.periodic(
-      Duration(seconds: 1),
-      _onTimer,
-    );
-    super.initState();
+  //@override
+  //void initState() {
+  //Timer.periodic(
+  //Duration(seconds: 1),
+  //_onTimer,
+  //);
+  //super.initState();
+  //}
+
+  void startTimer() {
+    isStart = !isStart;
+    if (isStart) {
+      timer = Timer.periodic(Duration(seconds: 1), _onTimer);
+    } else {
+      timer.cancel();
+    }
   }
 
   void _onTimer(Timer timer) {
-    setState(() => _counter++);
+    setState(() {
+      if (index == 2) {
+        index = 0;
+      } else {
+        index++;
+      }
+    });
   }
 
   @override
@@ -61,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
                 child: Center(
                   child: Text(
-                    '$_counter',
+                    member[index],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
@@ -78,6 +96,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.close),
+        onPressed: () {
+          startTimer();
+        },
       ),
     );
   }
