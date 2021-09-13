@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Roulette'),
     );
   }
 }
@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _counter = '';
+  int _counter = 0;
 
   @override
   void initState() {
@@ -41,10 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onTimer(Timer timer) {
-    DateTime now = DateTime.now();
-    DateFormat formatter = DateFormat('HH:mm:ss');
-    String formattedTime = formatter.format(now);
-    setState(() => _counter = formattedTime);
+    setState(() => _counter++);
   }
 
   @override
@@ -57,12 +54,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                // 背景色
+                color: Colors.blue,
+                child: Center(
+                  child: Text(
+                    '$_counter',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Expanded(
+              child: Container(
+                child: Text('aaa'),
+              ),
             ),
           ],
         ),
