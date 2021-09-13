@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
   bool isStart = false;
   var timer;
-  List<String> member = ['gako', 'yuto', 'tika'];
+  List<String> elem = [];
 
   //@override
   //void initState() {
@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void startTimer() {
     isStart = !isStart;
     if (isStart) {
-      timer = Timer.periodic(Duration(seconds: 1), _onTimer);
+      timer = Timer.periodic(Duration(milliseconds: 100), _onTimer);
     } else {
       timer.cancel();
     }
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
                 child: Center(
                   child: Text(
-                    member[index],
+                    elem.length == 0 ? 'Roulette' : elem[index],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
