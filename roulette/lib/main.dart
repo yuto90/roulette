@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
   bool isStart = false;
   var timer;
+  // ルーレットに表示する要素
   List<String> elem = [];
 
   //@override
@@ -48,13 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
     if (isStart) {
       timer = Timer.periodic(Duration(milliseconds: 100), _onTimer);
     } else {
-      timer.cancel();
+      setState(() {
+        timer.cancel();
+      });
     }
   }
 
   void _onTimer(Timer timer) {
     setState(() {
-      if (index == 2) {
+      if (index == elem.length - 1) {
         index = 0;
       } else {
         index++;
@@ -111,7 +114,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.whatshot),
+        child: isStart == true
+            ? Icon(
+                Icons.whatshot,
+                color: Colors.pink,
+              )
+            : Icon(Icons.whatshot),
         onPressed: () {
           startTimer();
         },
