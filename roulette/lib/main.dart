@@ -30,10 +30,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
+  // ルーレットの回転フラグ
   bool isStart = false;
   var timer;
   // ルーレットに表示する要素
   List<String> elem = [];
+
+  bool? checkBox = false;
 
   //@override
   //void initState() {
@@ -62,6 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         index++;
       }
+    });
+  }
+
+  void handleCheckbox(bool? e) {
+    setState(() {
+      checkBox = e;
     });
   }
 
@@ -107,7 +116,28 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Container(
                 width: double.infinity,
                 color: Colors.blue[100],
-                child: Text('aaa'),
+                child: Center(
+                  child: Column(
+                    children: [
+                      CheckboxListTile(
+                        value: checkBox,
+                        title: Text(
+                          'Checkbox 2 Title',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        //onChanged: (bool value) {
+                        //setState(() {
+                        //checkBox = value;
+                        //});
+                        //},
+                        onChanged: handleCheckbox,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
