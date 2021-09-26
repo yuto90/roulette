@@ -7,7 +7,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,17 +34,12 @@ class _MyHomePageState extends State<MyHomePage> {
   var timer;
   // ルーレットに表示する要素
   List<String> elem = [];
+  List<String> checkedElem = [];
 
-  bool? checkBox = false;
+  List<bool> checkBox = [];
 
-  //@override
-  //void initState() {
-  //Timer.periodic(
-  //Duration(seconds: 1),
-  //_onTimer,
-  //);
-  //super.initState();
-  //}
+  // テキストフィールドにアクセスする用のコントローラー
+  var addController = TextEditingController();
 
   void startTimer() {
     isStart = !isStart;
@@ -60,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onTimer(Timer timer) {
     setState(() {
-      if (index == elem.length - 1) {
+      if (index == checkedElem.length - 1) {
         index = 0;
       } else {
         index++;
@@ -68,9 +62,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void handleCheckbox(bool? e) {
+  void handleCheckbox(int index, bool e) {
     setState(() {
-      checkBox = e;
+      checkBox[index] = e;
+    });
+  }
+
+  // 選択肢を追加する用の関数
+  void addElem() {
+    setState(() {
+      elem.add(addController.text);
+      checkBox.add(false);
+      addController.text = '';
     });
   }
 
@@ -82,14 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 4,
+              flex: 7,
               child: Container(
                 width: double.infinity,
                 // 背景色
                 color: Colors.blue,
                 child: Center(
                   child: Text(
-                    elem.length == 0 ? 'Roulette' : elem[index],
+                    checkedElem.length == 0 ? 'Roulette' : checkedElem[index],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
@@ -102,9 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               flex: 1,
               child: Container(
-                width: double.infinity,
-                color: Colors.blue[300],
                 child: TextField(
+                  controller: addController,
                   decoration: InputDecoration(
                     hintText: 'add',
                   ),
@@ -112,28 +114,56 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Expanded(
-              flex: 4,
+              flex: 1,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {
+                  addElem();
+                },
+                child: Text('Add'),
+              ),
+            ),
+            Expanded(
+              flex: 7,
               child: Container(
                 width: double.infinity,
                 color: Colors.blue[100],
                 child: Center(
                   child: Column(
                     children: [
-                      CheckboxListTile(
-                        value: checkBox,
-                        title: Text(
-                          'Checkbox 2 Title',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Flexible(
+                        flex: 1,
+                        child: ListView.builder(
+                          itemCount: checkBox.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return (CheckboxListTile(
+                              //value:
+                              //checkBox.length == 0 ? checkBox[index] : true,
+                              value: checkBox[index],
+                              title: Text(
+                                elem[index],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              controlAffinity: ListTileControlAffinity.leading,
+                              //onChanged: handleCheckbox(index),
+                              onChanged: (val) {
+                                setState(() {
+                                  checkBox[index] = val!;
+                                  if (val) {
+                                    checkedElem.add(elem[index]);
+                                  } else {
+                                    checkedElem.remove(elem[index]);
+                                  }
+                                });
+                              },
+                            ));
+                          },
                         ),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        //onChanged: (bool value) {
-                        //setState(() {
-                        //checkBox = value;
-                        //});
-                        //},
-                        onChanged: handleCheckbox,
                       ),
                     ],
                   ),
