@@ -38,6 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<bool> checkBox = [];
 
+  String displayWord = 'Roulette';
+
   // テキストフィールドにアクセスする用のコントローラー
   var addController = TextEditingController();
 
@@ -59,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         index++;
       }
+      changeDisplayWord();
     });
   }
 
@@ -77,6 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void changeDisplayWord() {
+    if (checkedElem.length == 0) {
+      displayWord = 'Roulette';
+    } else {
+      displayWord = checkedElem[index];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
                 child: Center(
                   child: Text(
-                    checkedElem.length == 0 ? 'Roulette' : checkedElem[index],
+                    displayWord,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
@@ -140,8 +151,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           itemCount: checkBox.length,
                           itemBuilder: (BuildContext context, int index) {
                             return (CheckboxListTile(
-                              //value:
-                              //checkBox.length == 0 ? checkBox[index] : true,
                               value: checkBox[index],
                               title: Text(
                                 elem[index],
@@ -150,7 +159,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               controlAffinity: ListTileControlAffinity.leading,
-                              //onChanged: handleCheckbox(index),
                               onChanged: (val) {
                                 setState(() {
                                   checkBox[index] = val!;
@@ -159,6 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   } else {
                                     checkedElem.remove(elem[index]);
                                   }
+                                  // チェックした選択肢を追加、削除した際にはRangeErrorを回避するために一旦結果表示をリセット
+                                  displayWord = 'Roulette';
                                 });
                               },
                             ));
