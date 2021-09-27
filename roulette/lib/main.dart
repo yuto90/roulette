@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'dart:async';
 
 void main() {
@@ -25,55 +24,53 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // 画面に表示する要素のインデックス番号を格納する用
   int index = 0;
+  // ルーレットの起動有無フラグ
   bool isStart = false;
+  // Timerオブジェクトを格納する用
   var timer;
-
+  // ルーレットに選択肢として追加した要素を格納する用
   List<String> elem = [];
+  // チェックボックスで選択されている要素を格納する用
   List<String> checkedElem = [];
+  // 要素にチェックが入っているかをboolで格納しておく用
   List<bool> checkBox = [];
-
+  // 画面上部に表示する要素を格納する用
   String displayWord = 'Roulette';
-
+  // テキストフィールドにアクセスするためのコントローラー
   var addController = TextEditingController();
 
   void startTimer() {
-    isStart = !isStart;
-    if (isStart) {
-      timer = Timer.periodic(Duration(milliseconds: 100), onTimer);
-    } else {
-      setState(() {
-        timer.cancel();
-      });
+    if (elem.length > 0 && checkedElem.length > 1) {
+      isStart = !isStart;
+      if (isStart && checkedElem.length != 0) {
+        timer = Timer.periodic(Duration(milliseconds: 100), onTimer);
+      } else {
+        setState(() {
+          timer.cancel();
+        });
+      }
     }
   }
 
   void onTimer(Timer timer) {
     setState(() {
-      if (index == checkedElem.length - 1) {
+      if (index >= checkedElem.length - 1) {
         index = 0;
       } else {
         index++;
       }
-      changeDisplayWord();
+      displayWord = checkedElem[index];
     });
   }
 
-  // 要素を追加する用の関数
   void addElem() {
     setState(() {
       elem.add(addController.text);
       checkBox.add(false);
       addController.text = '';
     });
-  }
-
-  void changeDisplayWord() {
-    if (checkedElem.length == 0) {
-      displayWord = 'Roulette';
-    } else {
-      displayWord = checkedElem[index];
-    }
   }
 
   @override
@@ -148,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: ListView.builder(
                           itemCount: checkBox.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return (CheckboxListTile(
+                            return CheckboxListTile(
                               value: checkBox[index],
                               title: Text(
                                 elem[index],
@@ -158,18 +155,20 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               controlAffinity: ListTileControlAffinity.leading,
                               onChanged: (val) {
-                                setState(() {
-                                  checkBox[index] = val!;
-                                  if (val) {
-                                    checkedElem.add(elem[index]);
-                                  } else {
-                                    checkedElem.remove(elem[index]);
-                                  }
-                                  // チェックした選択肢を追加、削除した際にはRangeErrorを回避するために一旦結果表示をリセット
-                                  displayWord = 'Roulette';
-                                });
+                                if (!isStart) {
+                                  setState(() {
+                                    checkBox[index] = val!;
+                                    if (val) {
+                                      checkedElem.add(elem[index]);
+                                    } else {
+                                      checkedElem.remove(elem[index]);
+                                    }
+                                    // チェックした選択肢を追加、削除した際にはRangeErrorを回避するために一旦結果表示をリセット
+                                    displayWord = 'Roulette';
+                                  });
+                                }
                               },
-                            ));
+                            );
                           },
                         ),
                       ),
