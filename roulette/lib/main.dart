@@ -14,39 +14,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Roulette'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
-  // ルーレットの回転フラグ
   bool isStart = false;
   var timer;
-  // ルーレットに表示する要素
+
   List<String> elem = [];
   List<String> checkedElem = [];
-
   List<bool> checkBox = [];
 
   String displayWord = 'Roulette';
 
-  // テキストフィールドにアクセスする用のコントローラー
   var addController = TextEditingController();
 
   void startTimer() {
     isStart = !isStart;
     if (isStart) {
-      timer = Timer.periodic(Duration(milliseconds: 100), _onTimer);
+      timer = Timer.periodic(Duration(milliseconds: 100), onTimer);
     } else {
       setState(() {
         timer.cancel();
@@ -54,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _onTimer(Timer timer) {
+  void onTimer(Timer timer) {
     setState(() {
       if (index == checkedElem.length - 1) {
         index = 0;
@@ -65,13 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void handleCheckbox(int index, bool e) {
-    setState(() {
-      checkBox[index] = e;
-    });
-  }
-
-  // 選択肢を追加する用の関数
+  // 要素を追加する用の関数
   void addElem() {
     setState(() {
       elem.add(addController.text);
@@ -96,10 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 7,
+              flex: 4,
               child: Container(
                 width: double.infinity,
-                // 背景色
                 color: Colors.blue,
                 child: Center(
                   child: Text(
@@ -113,29 +100,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: TextField(
-                  controller: addController,
-                  decoration: InputDecoration(
-                    hintText: 'add',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Icon(
+                    Icons.playlist_add_outlined,
+                    color: Colors.blue,
+                    size: 40.0,
                   ),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                Expanded(
+                  flex: 5,
+                  child: TextField(
+                    controller: addController,
+                    decoration: InputDecoration(
+                      hintText: 'input elem',
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  addElem();
-                },
-                child: Text('Add'),
-              ),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
+                    onPressed: () {
+                      addElem();
+                    },
+                    child: Text('Add'),
+                  ),
+                ),
+              ],
             ),
             Expanded(
               flex: 7,
