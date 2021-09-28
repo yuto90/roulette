@@ -33,10 +33,10 @@ class _MyHomePageState extends State<MyHomePage> {
   var timer;
   // ルーレットに選択肢として追加した要素を格納する用
   List<String> elem = [];
-  // チェックボックスで選択されている要素を格納する用
-  List<String> checkedElem = [];
   // 要素にチェックが入っているかをboolで格納しておく用
   List<bool> checkBox = [];
+  // チェックボックスで選択されている要素を格納する用
+  List<String> checkedElem = [];
   // 画面上部に表示する要素を格納する用
   String displayWord = 'Roulette';
   // テキストフィールドにアクセスするためのコントローラー
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void startTimer() {
     if (elem.length > 0 && checkedElem.length > 1) {
       isStart = !isStart;
-      if (isStart && checkedElem.length != 0) {
+      if (isStart) {
         timer = Timer.periodic(Duration(milliseconds: 100), onTimer);
       } else {
         setState(() {
@@ -57,21 +57,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onTimer(Timer timer) {
     setState(() {
-      if (index >= checkedElem.length - 1) {
+      index++;
+      if (index > checkedElem.length - 1) {
         index = 0;
-      } else {
-        index++;
       }
       displayWord = checkedElem[index];
     });
   }
 
   void addElem() {
-    setState(() {
-      elem.add(addController.text);
-      checkBox.add(false);
-      addController.text = '';
-    });
+    if (addController.text != '' && !isStart) {
+      setState(() {
+        elem.add(addController.text);
+        checkBox.add(true);
+        checkedElem.add(addController.text);
+        addController.text = '';
+      });
+    }
   }
 
   @override
@@ -141,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Center(
                   child: Column(
                     children: [
-                      Flexible(
+                      Expanded(
                         flex: 1,
                         child: ListView.builder(
                           itemCount: checkBox.length,
