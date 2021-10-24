@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // 画面上部に表示する要素を格納する用
   String displayWord = 'Roulette';
   // テキストフィールドにアクセスするためのコントローラー
-  var addController = TextEditingController();
+  TextEditingController addController = TextEditingController();
 
   void startTimer() {
     if (elem.length > 0 && checkedElem.length > 1) {
