@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Roulette',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -74,6 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
         addController.text = '';
       });
     }
+  }
+
+  void resetElem() {
+    setState(() {
+      for (int i = 0; i < checkBox.length; i++) {
+        checkBox[i] = false;
+      }
+    });
   }
 
   @override
@@ -183,16 +191,32 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: isStart == true
-            ? Icon(
-                Icons.whatshot,
-                color: Colors.pink,
-              )
-            : Icon(Icons.whatshot),
-        onPressed: () {
-          startTimer();
-        },
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'reset',
+            child: Icon(Icons.restart_alt),
+            onPressed: () {
+              resetElem();
+            },
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          FloatingActionButton(
+            heroTag: 'start',
+            child: isStart == true
+                ? Icon(
+                    Icons.whatshot,
+                    color: Colors.pink,
+                  )
+                : Icon(Icons.whatshot),
+            onPressed: () {
+              startTimer();
+            },
+          ),
+        ],
       ),
     );
   }
