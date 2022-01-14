@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.roulette">
+    package="com.wordroulette">
    <application
         android:label="ワードルーレット"
         android:icon="@mipmap/ic_launcher">

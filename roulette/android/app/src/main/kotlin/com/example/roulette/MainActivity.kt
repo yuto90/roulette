@@ -1,4 +1,4 @@
-package com.example.roulette
+package com.wordroulette
 
 import io.flutter.embedding.android.FlutterActivity
 
