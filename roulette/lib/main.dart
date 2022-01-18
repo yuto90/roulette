@@ -77,13 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void resetElem() {
-    setState(() {
-      for (int i = 0; i < checkBox.length; i++) {
-        checkBox[i] = false;
-      }
-      checkedElem = [];
-      displayWord = 'Roulette';
-    });
+    if (!isStart) {
+      setState(() {
+        for (int i = 0; i < checkBox.length; i++) {
+          checkBox[i] = false;
+        }
+        checkedElem = [];
+        displayWord = 'Roulette';
+      });
+    }
   }
 
   @override
