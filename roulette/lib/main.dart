@@ -35,15 +35,18 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> elem = [];
   // 要素にチェックが入っているかをboolで格納しておく用
   List<bool> checkBox = [];
-  // チェックボックスで選択されている要素を格納する用
-  List<String> checkedElem = [];
   // 画面上部に表示する要素を格納する用
   String displayWord = 'Roulette';
   // テキストフィールドにアクセスするためのコントローラー
   TextEditingController addController = TextEditingController();
+  // チェックされている要素の数を格納しておく用
+  int checkCount = 0;
 
   void startTimer() {
-    if (elem.length > 0 && checkedElem.length > 1) {
+    // チェックされている要素数を格納
+    checkCount = checkBox.where((bool e) => e == true).toList().length;
+    // 選択要素がある1つ以上ある かつ 2つ以上チェックが入っている
+    if (elem.length > 0 && checkCount > 1) {
       isStart = !isStart;
       if (isStart) {
         timer = Timer.periodic(Duration(milliseconds: 100), onTimer);
@@ -58,10 +61,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void onTimer(Timer timer) {
     setState(() {
       index++;
-      if (index > checkedElem.length - 1) {
+      if (index > checkCount - 1) {
         index = 0;
       }
-      displayWord = checkedElem[index];
+      displayWord = elem[index];
     });
   }
 
@@ -70,7 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         elem.add(addController.text);
         checkBox.add(true);
-        checkedElem.add(addController.text);
         addController.text = '';
       });
     }
@@ -82,7 +84,16 @@ class _MyHomePageState extends State<MyHomePage> {
         for (int i = 0; i < checkBox.length; i++) {
           checkBox[i] = false;
         }
-        checkedElem = [];
+        displayWord = 'Roulette';
+      });
+    }
+  }
+
+  void deleteElem(int index) {
+    if (!isStart) {
+      setState(() {
+        elem.remove(elem[index]);
+        checkBox.removeAt(index);
         displayWord = 'Roulette';
       });
     }
@@ -168,16 +179,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              secondary: IconButton(
+                                onPressed: () {
+                                  deleteElem(index);
+                                },
+                                icon: Icon(Icons.delete_forever),
+                                color: Colors.black,
+                              ),
                               controlAffinity: ListTileControlAffinity.leading,
                               onChanged: (val) {
                                 if (!isStart) {
                                   setState(() {
                                     checkBox[index] = val!;
-                                    if (val) {
-                                      checkedElem.add(elem[index]);
-                                    } else {
-                                      checkedElem.remove(elem[index]);
-                                    }
                                     // チェックした選択肢を追加、削除した際にはRangeErrorを回避するために一旦結果表示をリセット
                                     displayWord = 'Roulette';
                                   });
