@@ -81,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
       for (int i = 0; i < checkBox.length; i++) {
         checkBox[i] = false;
       }
+      checkedElem = [];
+      displayWord = 'Roulette';
     });
   }
 
