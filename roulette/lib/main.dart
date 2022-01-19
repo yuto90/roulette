@@ -41,6 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController addController = TextEditingController();
   // チェックされている要素の数を格納しておく用
   int checkCount = 0;
+  // 画面でぐるぐるさせる項目を格納
+  List<String> displayElem = [];
 
   void startTimer() {
     // チェックされている要素数を格納
@@ -49,7 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
     if (elem.length > 0 && checkCount > 1) {
       isStart = !isStart;
       if (isStart) {
-        timer = Timer.periodic(Duration(milliseconds: 50), onTimer);
+        // 画面でぐるぐるさせる項目リストを作成
+        displayElem = [];
+        for (int i = 0; i < elem.length; i++) {
+          if (checkBox[i] == true) {
+            displayElem.add(elem[i]);
+          }
+        }
+        timer = Timer.periodic(Duration(milliseconds: 100), onTimer);
       } else {
         setState(() {
           timer.cancel();
@@ -60,14 +69,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onTimer(Timer timer) {
     setState(() {
-      if (index >= elem.length) {
+      if (index >= displayElem.length) {
         index = 0;
       }
-
-      if (checkBox[index] == true) {
-        displayWord = elem[index];
-      }
-
+      displayWord = displayElem[index];
       index++;
     });
   }
@@ -236,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Container(
                         color: Colors.white,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -261,13 +266,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: FloatingActionButton(
+                                backgroundColor: isStart == true
+                                    ? Colors.white
+                                    : Colors.pink[300],
                                 heroTag: 'start',
                                 child: isStart == true
                                     ? Icon(
-                                        Icons.whatshot,
+                                        Icons.stop,
                                         color: Colors.pink,
                                       )
-                                    : Icon(Icons.whatshot),
+                                    : Icon(Icons.play_arrow),
                                 onPressed: () {
                                   startTimer();
                                 },
