@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (elem.length > 0 && checkCount > 1) {
       isStart = !isStart;
       if (isStart) {
-        timer = Timer.periodic(Duration(milliseconds: 100), onTimer);
+        timer = Timer.periodic(Duration(milliseconds: 50), onTimer);
       } else {
         setState(() {
           timer.cancel();
@@ -60,11 +60,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onTimer(Timer timer) {
     setState(() {
-      index++;
-      if (index > checkCount - 1) {
+      if (index >= elem.length) {
         index = 0;
       }
-      displayWord = elem[index];
+
+      if (checkBox[index] == true) {
+        displayWord = elem[index];
+        print(displayWord);
+      }
+
+      index++;
+      print(index);
     });
   }
 
