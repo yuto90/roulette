@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // 要素にチェックが入っているかをboolで格納しておく用
   List<bool> checkBox = [];
   // 画面上部に表示する要素を格納する用
-  String displayWord = 'Roulette';
+  String displayWord = 'READY?';
   // テキストフィールドにアクセスするためのコントローラー
   TextEditingController addController = TextEditingController();
   // チェックされている要素の数を格納しておく用
@@ -66,11 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
       if (checkBox[index] == true) {
         displayWord = elem[index];
-        print(displayWord);
       }
 
       index++;
-      print(index);
     });
   }
 
@@ -90,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
         for (int i = 0; i < checkBox.length; i++) {
           checkBox[i] = false;
         }
-        displayWord = 'Roulette';
+        displayWord = 'READY?';
       });
     }
   }
@@ -100,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         elem.remove(elem[index]);
         checkBox.removeAt(index);
-        displayWord = 'Roulette';
+        displayWord = 'READY?';
       });
     }
   }
@@ -115,7 +113,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               flex: 4,
               child: Container(
-                width: double.infinity,
                 color: Colors.blue,
                 child: Center(
                   child: Text(
@@ -145,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: TextField(
                     controller: addController,
                     decoration: InputDecoration(
-                      hintText: 'input elem',
+                      hintText: '項目を入力してね',
                     ),
                   ),
                 ),
@@ -159,7 +156,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       addElem();
                     },
-                    child: Text('Add'),
+                    child: Text(
+                      '追加',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -167,79 +171,107 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               flex: 7,
               child: Container(
-                width: double.infinity,
                 color: Colors.blue[100],
-                child: Center(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: ListView.builder(
-                          itemCount: checkBox.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return CheckboxListTile(
-                              value: checkBox[index],
-                              title: Text(
-                                elem[index],
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: elem.length == 0
+                          ? Center(
+                              child: Text(
+                                '項目を追加してね',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.black,
                                 ),
                               ),
-                              secondary: IconButton(
-                                onPressed: () {
-                                  deleteElem(index);
-                                },
-                                icon: Icon(Icons.delete_forever),
-                                color: Colors.black,
-                              ),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              onChanged: (val) {
-                                if (!isStart) {
-                                  setState(() {
-                                    checkBox[index] = val!;
-                                    // チェックした選択肢を追加、削除した際にはRangeErrorを回避するために一旦結果表示をリセット
-                                    displayWord = 'Roulette';
-                                  });
-                                }
+                            )
+                          : ListView.builder(
+                              itemCount: checkBox.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return CheckboxListTile(
+                                  value: checkBox[index],
+                                  title: Text(
+                                    elem[index],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  secondary: IconButton(
+                                    onPressed: () {
+                                      deleteElem(index);
+                                    },
+                                    icon: Icon(Icons.delete_forever),
+                                    color: Colors.black,
+                                  ),
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  onChanged: (val) {
+                                    if (!isStart) {
+                                      setState(() {
+                                        checkBox[index] = val!;
+                                        // チェックした選択肢を追加、削除した際にはRangeErrorを回避するために一旦結果表示をリセット
+                                        displayWord = 'READY?';
+                                      });
+                                    }
+                                  },
+                                );
                               },
-                            );
-                          },
+                            ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FloatingActionButton(
+                                heroTag: 'reset',
+                                child: Icon(Icons.toggle_off_outlined),
+                                onPressed: () {
+                                  resetElem();
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FloatingActionButton(
+                                heroTag: 'allSelect',
+                                child: Icon(Icons.toggle_on),
+                                onPressed: () {
+                                  //todo
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FloatingActionButton(
+                                heroTag: 'start',
+                                child: isStart == true
+                                    ? Icon(
+                                        Icons.whatshot,
+                                        color: Colors.pink,
+                                      )
+                                    : Icon(Icons.whatshot),
+                                onPressed: () {
+                                  startTimer();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'reset',
-            child: Icon(Icons.restart_alt),
-            onPressed: () {
-              resetElem();
-            },
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          FloatingActionButton(
-            heroTag: 'start',
-            child: isStart == true
-                ? Icon(
-                    Icons.whatshot,
-                    color: Colors.pink,
-                  )
-                : Icon(Icons.whatshot),
-            onPressed: () {
-              startTimer();
-            },
-          ),
-        ],
       ),
     );
   }
