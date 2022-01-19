@@ -93,6 +93,17 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void allSelectElem() {
+    if (!isStart) {
+      setState(() {
+        for (int i = 0; i < checkBox.length; i++) {
+          checkBox[i] = true;
+        }
+        displayWord = 'READY?';
+      });
+    }
+  }
+
   void deleteElem(int index) {
     if (!isStart) {
       setState(() {
@@ -243,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 heroTag: 'allSelect',
                                 child: Icon(Icons.toggle_on),
                                 onPressed: () {
-                                  //todo
+                                  allSelectElem();
                                 },
                               ),
                             ),
